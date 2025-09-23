@@ -14,6 +14,59 @@ To write a yacc program to recognize a valid arithmetic expression that uses ope
 7.	Compile these with the C compiler as gcc lex.yy.c y.tab.c
 8.	Enter an arithmetic expression as input and the tokens are identified as output.
 ## PROGRAM
+```
+%{
+#include "exp3.tab.h"
+%}
+
+%%
+
+"=" { printf("\n Operator is EQUAL"); return '='; } 
+"+" { printf("\n Operator is PLUS"); return PLUS; }
+"-" { printf("\n Operator is MINUS"); return MINUS; }
+"/" { printf("\n Operator is DIVISION"); return DIVISION; }
+"*" { printf("\n Operator is MULTIPLICATION"); return MULTIPLICATION; } 
+[a-zA-Z]*[0-9]* { printf("\n Identifier is %s", yytext); return ID; }
+. { return yytext[0]; }
+\n { return 0; }
+
+%%
+
+int yywrap() { return 1;
+}
+```
+bison
+```
+%{
+#include<stdio.h>
+/* This YACC program is for recognizing the Expression */
+%}
+%token A ID
+%%
+statement: A'='E
+| E {
+printf("\n Valid arithmetic expression");
+$$=$1;
+}
+;
+E: E'+'ID
+| E'-'ID
+| E'*'ID
+| E'/'ID
+| ID
+;
+%%
+extern FILE*yyin;
+main() {
+do {
+yyparse();
+}while(!feof(yyin)); }
+ yyerror(char*s)
+{
+}
+```
 ## OUTPUT
+<img width="779" height="388" alt="image" src="https://github.com/user-attachments/assets/ca950772-75b0-4341-a390-d1f3d6adbd76" />
+
 ## RESULT
 A YACC program to recognize a valid arithmetic expression that uses operator +,-,* and / is executed successfully and the output is verified.
